@@ -22,6 +22,7 @@ export default function VideoRoom() {
     const [isScreenSharing, setIsScreenSharing] = useState(false);
     const [isHandRaised, setIsHandRaised] = useState(false);
     const [mediaSkipped, setMediaSkipped] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [activeReactions, setActiveReactions] = useState([]); // Array of { id, userId, emoji }
     const [hasJoined, setHasJoined] = useState(false);
@@ -341,9 +342,9 @@ export default function VideoRoom() {
                         ) : (
                             // Grid for Peers
                             <div className={`grid gap-2 md:gap-4 w-full h-full p-2 md:p-4 items-center justify-center ${peersList.length === 1 ? 'grid-cols-1' :
-                                    peersList.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
-                                        peersList.length <= 4 ? 'grid-cols-2' :
-                                            'grid-cols-2 lg:grid-cols-3'
+                                peersList.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
+                                    peersList.length <= 4 ? 'grid-cols-2' :
+                                        'grid-cols-2 lg:grid-cols-3'
                                 }`}>
                                 {peersList.map(([peerId, peerData]) => (
                                     <div key={peerId} className="relative w-full h-full min-h-[300px] overflow-hidden rounded-xl bg-gray-800">
