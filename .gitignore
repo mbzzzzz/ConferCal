@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Assets
+screenshots/
+architecture\ diagram/
+video/
+*.mp4
+*.zip
