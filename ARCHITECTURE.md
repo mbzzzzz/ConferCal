@@ -108,6 +108,8 @@ sequenceDiagram
     - Floating bar with action buttons.
     - Mute/Unmute, Video On/Off, Copy Link, End Call.
     - **Host Controls**: Kick/Mute buttons for host.
+    - **Recording Control**: Trigger for local screen recording using `MediaRecorder`.
+    - **Reactive Layout**: Scale-aware container for mobile usability.
 
 ### Custom Hooks
 
@@ -136,9 +138,13 @@ sequenceDiagram
     - `useWebRTC` creates new PC, adds local stream, sends Offer.
 
 3.  **Media Rendering**:
-    - `pc.ontrack` fires -> Updates `peers` state in `useWebRTC`.
-    - `VideoRoom` detects change in `peers`.
     - Renders new `VideoPlayer` with the remote stream.
+
+4.  **Local Recording**:
+    - `Controls` triggers `handleToggleRecording`.
+    - Captures "Screen + System Audio" via `getDisplayMedia`.
+    - `MediaRecorder` processes chunks in memory.
+    - `onstop` creates a Blob and triggers an programmatic `<a>.click()` for auto-download.
 
 ## Security Considerations
 
@@ -149,3 +155,30 @@ sequenceDiagram
 ## Scalability
 - **Mesh Topology**: Good for 2-4 users. Bandwidth usage increases as `N * (N-1)`.
 - **Future Scale**: For >5 users, a SFU (Selective Forwarding Unit) like Mediasoup or Jitsi is recommended to reduce client bandwidth load.
+
+## Appendix: High-Fidelity Diagram Generation Prompt
+
+To generate a professional visual representation of this architecture (e.g., using Mermaid or a high-end diagramming tool), use the following detailed prompt:
+
+> **System Architecture Prompt (ConferCal)**
+> 
+> Act as a Senior Solutions Architect. Generate a detailed Mermaid.js sequence diagram that illustrates the "Join and Connect" flow for my P2P Video Conferencing app.
+> 
+> **Scenario:** User B joins a room where User A is already present.
+> 
+> **Key entities to include:**
+> 1. **User B (Joiner Window)**: Needs to show the transition from `LandingPage` -> `Lobby` (Media Preview) -> `VideoRoom`.
+> 2. **User A (Existing Host)**: Already in the `VideoRoom`.
+> 3. **Signaling Server (Socket.io)**: The message relay hub.
+> 4. **Display Media API**: Used for the recording process.
+> 
+> **The flow MUST cover:**
+> - **Lobby Phase**: User B verifies Cam/Mic and sets Username locally.
+> - **Join Event**: User B clicks "Join", triggering `join-room` to the Signaling Server.
+> - **Discovery**: Server notifies User A about User B's arrival.
+> - **SDP Handshake**: User A (Initiator) creates an RTC Offer, relays it via Server to User B. User B sends back an RTC Answer.
+> - **ICE Candidate Trickle**: Both peers exchange ICE candidates concurrently through the server.
+> - **P2P Established**: Show direct media flow between User A and User B.
+> - **Recording Event**: Show User A triggering a local recording via `getDisplayMedia` and saving it to a local file.
+> 
+> **Styling requirements**: Use modern colors, clear activation boxes, and descriptive notes for each WebRTC event (`setLocalDescription`, `setRemoteDescription`, etc.). Ensure the distinction between Signaling messages (dashed lines) and P2P Media (thick lines) is clear.

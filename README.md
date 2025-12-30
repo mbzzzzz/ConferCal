@@ -4,23 +4,38 @@
 ConferCal is a premium Peer-to-Peer Video Conferencing application built with React, WebRTC, and Socket.io. It supports real-time video and audio communication for multiple participants with a modern, glassmorphic UI.
 
 ## Features
-- **Pristine Landing Page:** Modern entry point with "Get Started" flow.
-- **Green Room (Lobby):** Pre-join screen to test audio/video devices.
-- **Instant Room Creation:** Generate unique secure meeting rooms with one click.
-- **Real-time Video & Audio:** High-quality low-latency communication using WebRTC.
-- **Screen Recording:** Record your meetings locally with one click.
-- **Interactive Controls:** Screen Share, Raise Hand, Emoji Reactions.
-- **Host Moderation:** Host capabilities to Mute or Kick participants.
-- **Smart Grid Layout:** Dynamic video grid that adapts to the number of participants.
-- **Live Chat:** Real-time text chat within the meeting room.
-- **Visual Feedback:** Active speaker indicators, audio waves, and connection status.
-- **Secure Signaling:** Socket.io based signaling server for robust connection establishment.
+- **Pristine Landing Page:** Modern, animated entry point with a professional "Get Started" flow.
+- **Green Room (Lobby):** Mandatory pre-join screen for username entry and hardware (Camera/Mic) verification.
+- **Local Screen Recording:** Bonus feature to record meetings (Video + System Audio) locally with one-click download.
+- **High Mobile Responsiveness:** Fully optimized UI for smartphones/tablets, including a hideable participant sidebar.
+- **Host Moderation:** Host capabilities to Mute or Kick any participant in real-time.
+- **Real-time Screen Sharing:** Share your screen or specific windows with peers.
+- **Interactive Engagement:** Floating emoji reactions with animations and a live text chat.
+- **Visual Feedback:** Active speaker indicators, audio wave animations, and connection status badges.
+- **Peer-to-Peer Architecture:** High-quality low-latency communication using native WebRTC Mesh topology.
+- **Secure Signaling:** Robust Socket.io signaling server for reliable connection handshakes.
 
 ## Technologies Used
-- **Frontend:** React, Vite, Tailwind CSS
+- **Signaling**: Node.js, Socket.io
+- **Utilities**: Lucide React, Sonner (Toasts), UUID, Tailwind CSS
 - **Core:** WebRTC (Native API), Socket.io-client
 - **Icons:** Lucide React, Google Material Symbols
 - **Backend:** Node.js, Express, Socket.io (Signaling)
+
+## Project Structure
+```text
+confercall/
+├── server/            # Node.js Signaling Server
+│   └── server.js      # Socket.io logic & Moderation handlers
+├── src/
+│   ├── assets/        # Images & Global styles
+│   ├── components/    # UI Components (VideoRoom, Lobby, etc.)
+│   ├── hooks/         # Custom WebRTC & Media Hooks
+│   ├── utils/         # Socket configuration
+│   └── App.jsx        # Routing & Entry
+├── ARCHITECTURE.md    # Detailed system design
+└── AI_USAGE.md        # Documentation of AI contributions
+```
 
 ## Setup Instructions
 
@@ -78,8 +93,11 @@ ConferCal is a premium Peer-to-Peer Video Conferencing application built with Re
    - They can join by pasting the ID on the homepage or opening the link.
 
 3. **In Call:**
-   - Use the bottom control bar to Mute/Unmute or Turn Camera On/Off.
-   - Click "End" to leave the meeting.
+   - Use the bottom control bar:
+     - Mute/Unmute, Video On/Off, Copy Link, End Call.
+     - **Host Controls**: Kick/Mute buttons for host.
+     - **Recording Control**: Trigger for local screen recording using `MediaRecorder`.
+     - **Reactive Layout**: Scale-aware container for mobile usability.
 
 ## Dependencies
 

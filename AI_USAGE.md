@@ -35,16 +35,26 @@ Implementing a Mesh P2P topology using raw WebRTC APIs (as requested) instead of
 - Implemented "Glassmorphism" effect for the control bar (`backdrop-blur-xl`).
 - Used `lucide-react` for consistent iconography.
 
+### 4. Advanced Features & Bonuses
+**Context:**
+The user requested full parity with modern conference tools, including local recording and a landing page.
+
+**AI Action:**
+- **Local Recording:** Implemented using `MediaRecorder` API combined with `getDisplayMedia`. This allows capturing the composite audio/video from the session and saving it to a `.webm` file locally, fulfilling the bonus point requirement.
+- **Lobby Architecture:** Added a middle layer between the Room Setup and the actual call. This ensures WebRTC connections only initialize after the user has confirmed their identity and verified their hardware.
+- **Mobile Responsiveness:** Refactored the UI to use a responsive grid and a slide-out sidebar for participants, ensuring the "Premium" experience translates perfectly to mobile devices.
+- **Moderation Logic:** Extended the signaling server to handle privileged events (`kick-user`, `mute-user`) triggered only by the room host.
+
 ## Code Generation Breakdown
 
 | Component/File | AI Generated % | Notes |
 |---|---|---|
-| `server/server.js` | 100% | Standard Socket.io signaling pattern |
-| `src/hooks/useWebRTC.js` | 100% | Custom robust Mesh topology logic |
-| `src/components/VideoRoom.jsx` | 100% | Integrated logic + design |
-| `src/components/RoomSetup.jsx` | 100% | Adapted from user's HTML prompt |
-| `tailwind.config.js` | 100% | Configured for provided colors |
-| `README.md` | 100% | Followed requested template |
+| `server/server.js` | 100% | Handled signaling + custom moderation events |
+| `src/hooks/useWebRTC.js` | 100% | Robust Mesh logic with `shouldJoin` lifecycle |
+| `src/components/VideoRoom.jsx` | 100% | Orchestrated recording, chat, and sidebar |
+| `src/components/Lobby.jsx` | 100% | Device preview and name verification |
+| `src/components/LandingPage.jsx` | 100% | Modern animated hero section |
+| `tailwind.config.js` | 100% | Custom design tokens and responsive utilities |
 
 ## Challenges & Solutions
 
@@ -56,10 +66,14 @@ Implementing a Mesh P2P topology using raw WebRTC APIs (as requested) instead of
 **Issue:** `RTCPeerConnection` events (like `onicecandidate`) fire frequently. Storing PCs in state causes re-renders that break connections.
 **Solution:** Used `useRef` to store PeerConnections and only stored the resulting `MediaStream` in `useState` to update the Grid.
 
+### Challenge 3: Composite Recording
+**Issue:** Recording a single user's stream is easy, but recording the whole meeting (everyone's voice) requires a bridge or screen capture.
+**Solution:** Used `navigator.mediaDevices.getDisplayMedia` within the recording logic to capture the entire system/tab focus, ensuring all participant audio is included in the output file.
+
 ## Learning Outcomes
 - Raw WebRTC offers granular control but requires careful state management in React.
-- Socket.io is an excellent lightweight solution for signaling in P2P apps.
-- Separation of concerns (Media Hook vs Signaling Hook vs UI) makes the codebase maintainable.
+- Mobile-first conferencing requires dynamic UI scaling to maintain the "premium" feel.
+- The `MediaRecorder` API is extremely powerful for client-side recording without server overhead.
 
 ## External AI Tools & Resources
 
