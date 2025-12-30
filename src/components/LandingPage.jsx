@@ -31,10 +31,10 @@ export default function LandingPage() {
                 <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 pt-20 pb-12 lg:pt-32 lg:pb-24">
                     <div className="layout-content-container flex flex-col items-center max-w-[960px] mx-auto text-center gap-8">
                         <div className="flex flex-col gap-6 animate-fade-in-up">
-                            <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tight text-slate-900 dark:text-white">
+                            <h1 className="text-4xl md:text-7xl font-black leading-tight tracking-tight text-slate-900 dark:text-white">
                                 Effortless <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">Conference</span> Management.
                             </h1>
-                            <h2 className="text-lg md:text-xl font-medium text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                            <h2 className="text-base md:text-xl font-medium text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
                                 Streamline your events, speakers, and schedules in one intuitive platform. Focus on the experience, not the logistics.
                             </h2>
                         </div>

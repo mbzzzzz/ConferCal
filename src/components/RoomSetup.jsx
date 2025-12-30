@@ -93,8 +93,8 @@ export default function RoomSetup() {
                     <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] mix-blend-screen opacity-30 animate-pulse-slow delay-1000"></div>
                 </div>
 
-                <div className="text-center mb-16 animate-fade-in-up max-w-3xl mx-auto">
-                    <h1 className="text-5xl sm:text-6xl font-black tracking-tight text-gray-900 dark:text-white mb-6 font-display leading-[1.1]">
+                <div className="text-center mb-10 md:mb-16 animate-fade-in-up max-w-3xl mx-auto">
+                    <h1 className="text-3xl sm:text-6xl font-black tracking-tight text-gray-900 dark:text-white mb-6 font-display leading-[1.1]">
                         Video calls <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">simplified.</span>
                     </h1>
                     <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">

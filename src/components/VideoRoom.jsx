@@ -22,10 +22,10 @@ export default function VideoRoom() {
     const [isScreenSharing, setIsScreenSharing] = useState(false);
     const [isHandRaised, setIsHandRaised] = useState(false);
     const [mediaSkipped, setMediaSkipped] = useState(false);
-    const [isChatOpen, setIsChatOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [activeReactions, setActiveReactions] = useState([]); // Array of { id, userId, emoji }
     const [hasJoined, setHasJoined] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar toggle
 
     // Media Stream Hook
     const {
@@ -271,29 +271,36 @@ export default function VideoRoom() {
     ) : (
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden h-screen flex flex-col transition-colors duration-300">
             {/* Header */}
-            <header className="h-16 flex items-center justify-between px-6 border-b border-white/10 bg-background-dark z-20 shrink-0">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3 text-white">
+            <header className="h-16 flex items-center justify-between px-4 md:px-6 border-b border-white/10 bg-background-dark z-20 shrink-0">
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 text-white">
                         <div className="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
                             <img src={logo} alt="Logo" className="w-full h-full object-contain" />
                         </div>
-                        <h1 className="text-xl font-bold tracking-tight">ConferCal</h1>
+                        <h1 className="text-lg md:text-xl font-bold tracking-tight">ConferCal</h1>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-2 bg-surface-dark px-3 py-1.5 rounded-full border border-white/5">
+                <div className="flex items-center gap-3 md:gap-4">
+                    {/* Move Live Indicator Here */}
+                    <div className="flex items-center gap-2 bg-surface-dark px-2.5 py-1 rounded-full border border-white/5">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                         </span>
-                        <span className="text-sm font-medium font-mono text-gray-300">Live</span>
+                        <span className="text-[10px] md:text-xs font-bold font-mono text-gray-300 uppercase tracking-wider">Live</span>
                     </div>
-                </div>
 
-                <div className="flex items-center gap-4">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center text-xs font-bold text-white border border-white/20" title={username}>
-                        {username.slice(0, 2).toUpperCase()}
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                            className="md:hidden p-2 text-gray-400 hover:text-white"
+                        >
+                            <span className="material-symbols-outlined text-[20px]">group</span>
+                        </button>
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center text-xs font-bold text-white border border-white/20" title={username}>
+                            {username.slice(0, 2).toUpperCase()}
+                        </div>
                     </div>
                 </div>
             </header>
@@ -333,9 +340,10 @@ export default function VideoRoom() {
                             </div>
                         ) : (
                             // Grid for Peers
-                            <div className={`grid gap-4 w-full h-full p-4 items-center justify-center ${peersList.length === 1 ? 'grid-cols-1' :
-                                peersList.length <= 4 ? 'grid-cols-2' :
-                                    'grid-cols-3'
+                            <div className={`grid gap-2 md:gap-4 w-full h-full p-2 md:p-4 items-center justify-center ${peersList.length === 1 ? 'grid-cols-1' :
+                                    peersList.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
+                                        peersList.length <= 4 ? 'grid-cols-2' :
+                                            'grid-cols-2 lg:grid-cols-3'
                                 }`}>
                                 {peersList.map(([peerId, peerData]) => (
                                     <div key={peerId} className="relative w-full h-full min-h-[300px] overflow-hidden rounded-xl bg-gray-800">
@@ -366,7 +374,7 @@ export default function VideoRoom() {
 
                     {/* Self View (PIP) */}
                     {stream && (
-                        <div className={`absolute bottom-8 ${isChatOpen ? 'right-96' : 'right-8'} w-64 aspect-video bg-gray-800 rounded-xl overflow-hidden border border-white/10 shadow-xl z-30 hidden lg:block group/pip hover:scale-105 transition-all duration-300`}>
+                        <div className={`absolute bottom-24 md:bottom-28 ${isChatOpen ? 'right-4 md:right-96' : 'right-4 md:right-8'} w-32 md:w-64 aspect-video bg-gray-800 rounded-xl overflow-hidden border border-white/10 shadow-xl z-30 group/pip hover:scale-105 transition-all duration-300`}>
                             <VideoPlayer
                                 stream={stream}
                                 isLocal={true}
@@ -374,46 +382,57 @@ export default function VideoRoom() {
                                 muted={true}
                             />
                             {isHandRaised && (
-                                <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-[10px] font-bold z-10">
+                                <div className="absolute top-2 right-2 bg-yellow-500 text-black px-1.5 py-0.5 rounded text-[8px] md:text-[10px] font-bold z-10">
                                     ✋ Raised
                                 </div>
                             )}
                             {/* Reactions Overlay (Self) */}
                             {activeReactions.filter(r => r.userId === userId).map(reaction => (
-                                <div key={reaction.id} className="absolute bottom-16 left-1/2 -translate-x-1/2 text-6xl animate-float-up pointer-events-none z-20">
+                                <div key={reaction.id} className="absolute bottom-8 md:bottom-16 left-1/2 -translate-x-1/2 text-4xl md:text-6xl animate-float-up pointer-events-none z-20">
                                     {reaction.emoji}
                                 </div>
                             ))}
                         </div>
                     )}
 
-                    {/* Controls */}
-                    <Controls
-                        isAudioEnabled={isAudioEnabled}
-                        isVideoEnabled={isVideoEnabled}
-                        toggleAudio={toggleAudio}
-                        toggleVideo={toggleVideo}
-                        leaveRoom={leaveRoom}
-                        roomId={roomId}
-                        handleScreenShare={handleScreenShare}
-                        isScreenSharing={isScreenSharing}
-                        handleRaiseHand={handleRaiseHand}
-                        isHandRaised={isHandRaised}
-                        isHost={isHost}
-                        endMeetingForAll={endMeetingForAll}
-                        isChatOpen={isChatOpen}
-                        toggleChat={toggleChat}
-                        toggleSettings={() => setIsSettingsOpen(true)}
-                        onReaction={handleReaction}
-                        isRecording={isRecording}
-                        toggleRecording={handleToggleRecording}
-                    />
+                    {/* Controls Container for Responsiveness */}
+                    <div className="fixed bottom-0 left-0 right-0 p-4 flex justify-center z-40 pointer-events-none">
+                        <div className="pointer-events-auto scale-75 sm:scale-90 md:scale-100 origin-bottom">
+                            <Controls
+                                isAudioEnabled={isAudioEnabled}
+                                isVideoEnabled={isVideoEnabled}
+                                toggleAudio={toggleAudio}
+                                toggleVideo={toggleVideo}
+                                leaveRoom={leaveRoom}
+                                roomId={roomId}
+                                handleScreenShare={handleScreenShare}
+                                isScreenSharing={isScreenSharing}
+                                handleRaiseHand={handleRaiseHand}
+                                isHandRaised={isHandRaised}
+                                isHost={isHost}
+                                endMeetingForAll={endMeetingForAll}
+                                isChatOpen={isChatOpen}
+                                toggleChat={toggleChat}
+                                toggleSettings={() => setIsSettingsOpen(true)}
+                                onReaction={handleReaction}
+                                isRecording={isRecording}
+                                toggleRecording={handleToggleRecording}
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                {/* Sidebar */}
-                <aside className="w-80 border-l border-white/10 bg-background-dark flex flex-col z-10 shrink-0 hidden md:flex">
-                    <div className="flex items-center border-b border-white/5 p-2 gap-1">
-                        <button className="flex-1 py-2 text-sm font-medium text-white bg-surface-dark-lighter rounded-lg transition-all shadow-sm">
+                {/* Responsive Sidebar */}
+                <aside className={`
+                    fixed inset-y-0 right-0 w-80 bg-background-dark border-l border-white/10 z-50 transform transition-transform duration-300 ease-in-out md:static md:translate-x-0
+                    ${isSidebarOpen ? 'translate-x-0 shadow-2xl' : 'translate-x-full'}
+                `}>
+                    <div className="flex items-center justify-between border-b border-white/5 p-4 md:p-2">
+                        <span className="text-sm font-bold text-white md:hidden">Participants</span>
+                        <button onClick={() => setIsSidebarOpen(false)} className="md:hidden text-gray-400">
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                        <button className="hidden md:block flex-1 py-2 text-sm font-medium text-white bg-surface-dark-lighter rounded-lg transition-all shadow-sm">
                             Participants ({totalParticipants})
                         </button>
                     </div>
