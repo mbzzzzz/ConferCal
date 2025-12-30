@@ -63,20 +63,28 @@ export default function VideoRoom() {
         toggleHand(newState);
     };
 
+    const revertToCamera = async () => {
+        const constraints = {
+            video: selectedVideoDeviceId ? { deviceId: { exact: selectedVideoDeviceId } } : true,
+            audio: selectedAudioDeviceId ? { deviceId: { exact: selectedAudioDeviceId } } : true
+        };
+        try {
+            // Stop current screen tracks first
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            const cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+            setStream(cameraStream);
+            setIsScreenSharing(false);
+        } catch (err) {
+            console.error("Failed to revert to camera", err);
+            toast.error("Failed to restore camera");
+        }
+    };
+
     const handleScreenShare = async () => {
         if (isScreenSharing) {
-            // Stop sharing - Revert to camera
-            const constraints = {
-                video: selectedVideoDeviceId ? { deviceId: { exact: selectedVideoDeviceId } } : true,
-                audio: selectedAudioDeviceId ? { deviceId: { exact: selectedAudioDeviceId } } : true
-            };
-            try {
-                const cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-                setStream(cameraStream);
-                setIsScreenSharing(false);
-            } catch (err) {
-                console.error("Failed to revert to camera", err);
-            }
+            await revertToCamera();
         } else {
             // Start sharing
             try {
@@ -87,19 +95,13 @@ export default function VideoRoom() {
 
                 // Handle user clicking "Stop sharing" on system UI
                 screenStream.getVideoTracks()[0].onended = () => {
-                    // Only toggle if we are still marked as sharing
-                    setIsScreenSharing(prev => {
-                        if (prev) {
-                            // Revert manually
-                            // We can't call handleScreenShare easily due to closure, but we can trigger the revert logic
-                            // For simplicity, reload or just let the user click the button again?
-                            // Better: Just set state false, effect might need to handle stream revert?
-                            // Simplest: User has to click the button in UI to restore camera.
-                            return false;
-                        }
-                        return prev;
-                    });
+                    revertToCamera();
                 };
+
+                // Stop previous camera tracks
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
 
                 setStream(screenStream);
                 setIsScreenSharing(true);
