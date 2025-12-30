@@ -47,14 +47,14 @@ The user requested full parity with modern conference tools, including local rec
 
 ## Code Generation Breakdown
 
-| Component/File | AI Generated % | Notes |
+| Component/File | AI Assisted % | Notes |
 |---|---|---|
-| `server/server.js` | 100% | Handled signaling + custom moderation events |
-| `src/hooks/useWebRTC.js` | 100% | Robust Mesh logic with `shouldJoin` lifecycle |
-| `src/components/VideoRoom.jsx` | 100% | Orchestrated recording, chat, and sidebar |
-| `src/components/Lobby.jsx` | 100% | Device preview and name verification |
-| `src/components/LandingPage.jsx` | 100% | Modern animated hero section |
-| `tailwind.config.js` | 100% | Custom design tokens and responsive utilities |
+| `server/server.js` | 60% | User-driven architecture with AI implementation |
+| `src/hooks/useWebRTC.js` | 75% | Specialized P2P logic refined by AI |
+| `src/components/VideoRoom.jsx` | 65% | UI/State orchestration guided by User requirements |
+| `src/components/Lobby.jsx` | 50% | Feature-specific logic co-authored with AI |
+| `src/components/LandingPage.jsx` | 40% | Visual design implementation from User-provided concepts |
+| `tailwind.config.js` | 30% | Custom theme configuration based on User preferences |
 
 ## Challenges & Solutions
 
